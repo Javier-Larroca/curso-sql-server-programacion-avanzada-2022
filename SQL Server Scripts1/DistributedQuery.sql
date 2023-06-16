@@ -1,0 +1,25 @@
+
+
+--Activar Distributed Queries
+
+SP_CONFIGURE 'Show advanced options', 1
+RECONFIGURE
+
+SP_CONFIGURE 'Ad Hoc Distributed Queries', 1
+RECONFIGURE
+
+--Conectar a un servidor remoto
+
+SELECT * FROM OPENROWSET ('SQLNCLI', 'Server=192.168.0.14;UID=mariano:PWD=bcd1234',
+							cuarentacero.dbo.udemycurso)
+
+--Leer archivo JSON
+DECLARE @JSON VARCHAR(MAX)
+SELECT *
+	FROM OPENROWSET (BULK 'C:\SQLDATA\ARCHIVO.JSON', SINGLE_CLOB) IMPORT
+	--SINGLE_CLOB funciona con VARCHAR
+
+DECLARE @JSON VARCHAR(MAX)
+SELECT @JSON = BULKCOLUM
+	FROM OPENROWSET (BULK 'C:\SQLDATA\ARCHIVO.JSON', SINGLE_CLOB) IMPORT
+SELECT * FROM OPENJSON (@JSON)
